@@ -65,13 +65,19 @@ public class LinkedList<E> {
         StringBuilder s = new StringBuilder(length);
         s.append("[");
         Node<E> tmp = first;
-        for (int i = 0; i < length; i++ ) {
-            s.append(tmp.element + ", ");
-            tmp = tmp.next;
+        if (tmp == null) {
+            s.append("]");
+            System.out.println(s);
+        } else  {
+            for (int i = 0; i < length; i++ ) {
+                s.append(tmp.element + ", ");
+                tmp = tmp.next;
+            }
+            s.setLength(s.length() - 2);
+            s.append("]");
+            System.out.println(s);
         }
-        s.setLength(s.length() - 2);
-        s.append("]");
-        System.out.println(s);
+
     }
 
     public void connectBefore(E e, Node<E> succ) {
@@ -101,14 +107,60 @@ public class LinkedList<E> {
         return tmp;
     }
 
+    public void deleteLast() {
+        last = last.prev;
+    }
+
+// Доделать
+    public E removeFirst() {
+        Node<E> tmp = first;
+        if (first == null) {
+            throw new IllegalArgumentException();
+        } else {
+            unlink(tmp);
+        }
+        return tmp.element;
+    }
+
+
+    public E remove(int index) {
+        checkPosition(index);
+        return unlink(getNode(index));
+    }
+
+
+    public E unlink(Node<E> tmp) {
+        E element = tmp.element;
+        Node<E> prev = tmp.prev;
+        Node<E> next = tmp.next;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            tmp.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            tmp.next = null;
+        }
+
+        tmp.element = null;
+        length--;
+        return element;
+    }
+
+
     public static void main(String[] args) {
         LinkedList linkedList = new LinkedList();
         linkedList.add(5);
-        linkedList.add(10);
-        linkedList.add(25);
+        linkedList.removeFirst();
 
-        System.out.println(linkedList.getNode(1).element);
         linkedList.print();
+
     }
 
 }
